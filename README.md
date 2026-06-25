@@ -1,6 +1,6 @@
 # Task Manager CLI
 
-Gerenciador de tarefas via linha de comando com Python e SQLite.
+Command-line task manager using Python and SQLite.
 
 ## Instalação
 
