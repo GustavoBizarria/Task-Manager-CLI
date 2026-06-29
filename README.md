@@ -2,13 +2,13 @@
 
 Command-line task manager using Python and SQLite.
 
-## Instalação
+## installation
 
 ```bash
 pip install -e .
 ```
 
-## Uso
+## Use
 
 ```bash
 task add "Estudar Python" --priority alta
