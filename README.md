@@ -81,6 +81,12 @@ python main.py export --format json --output tasks.json
 ### v0.1.0
 - Initial release: add, list, update, delete, and export tasks (CSV/JSON)
 
+### v0.2.0
+- Added due dates for tasks (`--due` flag on `add` and `update`)
+- Overdue tasks are now highlighted in the terminal
+- Colored, table-based CLI output using `rich`
+- Automatic database migration for existing `tasks.db` files created before this version
+
 ## License
 
 This project is open source and available under the MIT License.
