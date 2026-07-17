@@ -3,7 +3,7 @@ import sys
  
 from rich.console import Console
 from rich.table import Table
- 
+
 from task_manager.db import init_db
 from task_manager import tasks
 from task_manager import export
@@ -20,7 +20,6 @@ PRIORITY_STYLES = {
     "medium": "white",
     "high": "bold red",
 }
- 
  
 def cmd_add(args):
     task_id = tasks.add_task(args.title, args.description or "", args.priority, args.due)
