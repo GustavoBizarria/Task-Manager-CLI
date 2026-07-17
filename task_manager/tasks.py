@@ -22,20 +22,28 @@ def is_overdue(task: dict) -> bool:
     return datetime.strptime(task["due_date"], DATE_FORMAT).date() < date.today()
 
 
-def add_task(title: str, description: str = "", priority: str = "medium") -> int:
+def add_task(
+    title: str,
+    description: str = "",
+    priority: str = "medium",
+    due_date: Optional[str] = None,
+) -> int:
+    """Adiciona uma nova tarefa e retorna o id gerado."""
     if priority not in VALID_PRIORITIES:
-        raise ValueError(f"Invalid Priority: {priority}")
-
+        raise ValueError(f"Prioridade inválida: {priority}")
+    due_date = _validate_due_date(due_date)
+ 
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO tasks (title, description, priority) VALUES (?, ?, ?)",
-        (title, description, priority),
+        "INSERT INTO tasks (title, description, priority, due_date) VALUES (?, ?, ?, ?)",
+        (title, description, priority, due_date),
     )
     conn.commit()
     task_id = cursor.lastrowid
     conn.close()
     return task_id
+ 
 
 
 def list_tasks(status: Optional[str] = None) -> list:
