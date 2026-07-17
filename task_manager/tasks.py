@@ -1,5 +1,5 @@
 from typing import Optional
-from db import get_connection
+from task_manager.db import get_connection
 
 VALID_STATUSES = ("pending", "in_progress", "done")
 VALID_PRIORITIES = ("low", "medium", "high")
