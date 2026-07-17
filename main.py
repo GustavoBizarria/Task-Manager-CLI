@@ -1,6 +1,9 @@
 import argparse
 import sys
 
+from rich.console import Console
+from rich.table import Table
+
 from task_manager.db import init_db
 from task_manager import tasks
 from task_manager import export
