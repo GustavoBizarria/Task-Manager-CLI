@@ -42,23 +42,26 @@ The database file (`tasks.db`) is created automatically the first time you run t
 
 ```bash
 # Add a task
-python main.py add "Study SQL" -d "Review joins" -p high
-
+python main.py add "Study SQL" -d "Review joins" -p high --due 2026-07-25
+ 
 # List all tasks
 python main.py list
-
+ 
 # List only pending tasks
 python main.py list --status pending
-
+ 
 # Update a task
-python main.py update 1 -t "New title" -p low
-
+python main.py update 1 -t "New title" -p low --due 2026-08-01
+ 
+# Remove a task's due date
+python main.py update 1 --due ""
+ 
 # Mark a task as done
 python main.py done 1
-
+ 
 # Delete a task
 python main.py delete 1
-
+ 
 # Export tasks
 python main.py export --format csv --output tasks.csv
 python main.py export --format json --output tasks.json
@@ -75,6 +78,13 @@ python main.py export --format json --output tasks.json
 - `low`
 - `medium`
 - `high`
+ 
+## Due Dates
+ 
+- Format: `YYYY-MM-DD` (e.g. `2026-07-25`)
+- Optional — tasks without a due date show `-` in the list
+- Tasks past their due date that aren't marked `done` are highlighted in red with a ⚠ warning
+- Pass an empty string (`--due ""`) to `update` to clear a task's due date
 
 ## Changelog
 
