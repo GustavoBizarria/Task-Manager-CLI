@@ -8,26 +8,51 @@ from task_manager.db import init_db
 from task_manager import tasks
 from task_manager import export
 
+console = Console()
+
+STATUS_STYLES = {
+    "pending": "yellow",
+    "in_progress": "cyan",
+    "done": "green",
+}
+PRIORITY_STYLES = {
+    "low": "dim",
+    "medium": "white",
+    "high": "bold red",
+}
+
+
 
 def cmd_add(args):
     task_id = tasks.add_task(args.title, args.description or "", args.priority)
-    print(f"Tarefa criada com sucesso (id={task_id}).")
+    console.print(f"[green]✔[/green] Tarefa criada com sucesso (id=[bold]{task_id}[/bold]).")
 
 
 def cmd_list(args):
     task_list = tasks.list_tasks(status=args.status)
     if not task_list:
-        print("Nenhuma tarefa encontrada.")
+        console.print("[yellow]Nenhuma tarefa encontrada.[/yellow]")
         return
 
-    for task in task_list:
-        print(
-            f"[{task['id']}] ({task['status']}, prioridade: {task['priority']}) "
-            f"{task['title']}"
-        )
-        if task["description"]:
-            print(f"      {task['description']}")
+    table = Table(title="Tarefas", show_lines=False, header_style="bold magenta")
+    table.add_column("ID", justify="right", style="bold")
+    table.add_column("Título")
+    table.add_column("Descrição")
+    table.add_column("Status", justify="center")
+    table.add_column("Prioridade", justify="center")
 
+    for task in task_list:
+        status_style = STATUS_STYLES.get(task["status"], "white")
+        priority_style = PRIORITY_STYLES.get(task["priority"], "white")
+        table.add_row(
+            str(task["id"]),
+            task["title"],
+            task["description"] or "-",
+            f"[{status_style}]{task['status']}[/{status_style}]",
+            f"[{priority_style}]{task['priority']}[/{priority_style}]",
+        )
+
+    console.print(table)
 
 def cmd_update(args):
     updated = tasks.update_task(
@@ -37,25 +62,25 @@ def cmd_update(args):
         priority=args.priority,
     )
     if updated is None:
-        print(f"Tarefa {args.id} não encontrada.")
+        console.print(f"[red]✘ Tarefa {args.id} não encontrada.[/red]")
         sys.exit(1)
-    print(f"Tarefa {args.id} atualizada com sucesso.")
+    console.print(f"[green]✔[/green] Tarefa {args.id} atualizada com sucesso.")
 
 
 def cmd_done(args):
     updated = tasks.set_status(args.id, "done")
     if updated is None:
-        print(f"Tarefa {args.id} não encontrada.")
+        console.print(f"[red]✘ Tarefa {args.id} não encontrada.[/red]")
         sys.exit(1)
-    print(f"Tarefa {args.id} marcada como concluída.")
+    console.print(f"[green]✔[/green] Tarefa {args.id} marcada como [bold green]concluída[/bold green].")
 
 
 def cmd_delete(args):
     deleted = tasks.delete_task(args.id)
     if not deleted:
-        print(f"Tarefa {args.id} não encontrada.")
+        console.print(f"[red]✘ Tarefa {args.id} não encontrada.[/red]")
         sys.exit(1)
-    print(f"Tarefa {args.id} removida com sucesso.")
+    console.print(f"[green]✔[/green] Tarefa {args.id} removida com sucesso.")
 
 
 def cmd_export(args):
@@ -63,7 +88,7 @@ def cmd_export(args):
         path = export.export_to_csv(args.output)
     else:
         path = export.export_to_json(args.output)
-    print(f"Tarefas exportadas para {path}")
+    console.print(f"[green]✔[/green] Tarefas exportadas para [bold]{path}[/bold]")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -114,7 +139,11 @@ def main():
     init_db()
     parser = build_parser()
     args = parser.parse_args()
-    args.func(args)
+    try:
+        args.func(args)
+    except ValueError as error:
+        console.print(f"[red]✘ Erro: {error}[/red]")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
