@@ -76,6 +76,11 @@ python main.py export --format json --output tasks.json
 - `medium`
 - `high`
 
+## Changelog
+
+### v0.1.0
+- Initial release: add, list, update, delete, and export tasks (CSV/JSON)
+
 ## License
 
 This project is open source and available under the MIT License.
