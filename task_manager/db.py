@@ -25,5 +25,10 @@ def init_db() -> None:
         )
         """
     )
+    cursor.execute('PRAGMA table_info(tasks)')
+    existing_columns = {row['name'] for row in cursor.fetchall()}
+    if 'due_date' not in existing_columns:
+        cursor.execute('ALTER TABLE tasks ADD COLUMN due_date EXIT')
+
     conn.commit()
     conn.close()

@@ -1,13 +1,30 @@
+from datetime import date, datetime
 from typing import Optional
 from task_manager.db import get_connection
 
 VALID_STATUSES = ("pending", "in_progress", "done")
 VALID_PRIORITIES = ("low", "medium", "high")
+DATE_FORMAT = "%Y-%m-%d"
+
+
+def _validate_due_date(due_date: Optional[str]) -> Optional[str]:
+    if due_date is None or due_date == "":
+        return None
+    try:
+        datetime.strptime(due_date, DATE_FORMAT)
+    except ValueError:
+        raise ValueError(f"Invalid date: '{due_date}'. Use the format YYYY-MM-DD.")
+    return due_date
+
+def is_overdue(task: dict) -> bool:
+    if not task.get("due_date") or task["status"] == "done":
+        return False
+    return datetime.strptime(task["due_date"], DATE_FORMAT).date() < date.today()
 
 
 def add_task(title: str, description: str = "", priority: str = "medium") -> int:
     if priority not in VALID_PRIORITIES:
-        raise ValueError(f"Prioridade inválida: {priority}")
+        raise ValueError(f"Invalid Priority: {priority}")
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -59,7 +76,7 @@ def update_task(
     new_priority = priority if priority is not None else task["priority"]
 
     if new_priority not in VALID_PRIORITIES:
-        raise ValueError(f"Prioridade inválida: {new_priority}")
+        raise ValueError(f"Invalid Priority: {new_priority}")
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -74,7 +91,7 @@ def update_task(
 
 def set_status(task_id: int, status: str) -> Optional[dict]:
     if status not in VALID_STATUSES:
-        raise ValueError(f"Status inválido: {status}")
+        raise ValueError(f"Invalid Priority: {status}")
 
     task = get_task(task_id)
     if task is None:
