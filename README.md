@@ -97,6 +97,9 @@ python main.py export --format json --output tasks.json
 - Colored, table-based CLI output using `rich`
 - Automatic database migration for existing `tasks.db` files created before this version
 
+### v0.3.0
+- Added `--lang` flag for switching the CLI language (English/Portuguese), with the preference saved to `config.json`
+
 ## License
 
 This project is open source and available under the MIT License.
