@@ -86,6 +86,12 @@ python main.py export --format json --output tasks.json
 - Tasks past their due date that aren't marked `done` are highlighted in red with a ⚠ warning
 - Pass an empty string (`--due ""`) to `update` to clear a task's due date
 
+## Language (New Feature)
+ 
+- Supported: `pt` (Portuguese, default) and `en` (English)
+- Switch anytime with `--lang`: `python main.py --lang en list`
+- Your choice is saved to `config.json` and becomes the default for future runs — no need to repeat the flag every time
+
 ## Changelog
 
 ### v0.1.0
