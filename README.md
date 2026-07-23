@@ -30,7 +30,7 @@ Task-Manager-CLI/
 ## Installation
 
 ```bash
-git clone https://github.com/your-username/Task-Manager-CLI.git
+git clone https://github.com/GustavoBizarria/Task-Manager-CLI.git
 cd Task-Manager-CLI
 ```
 
